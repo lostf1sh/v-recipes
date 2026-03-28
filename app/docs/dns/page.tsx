@@ -36,9 +36,9 @@ const variants = [
   {
     name: "ECS Optimized",
     endpoint: "https://v.recipes/dns-ecs",
-    upstream: "Google Public DNS",
+    upstream: "dns.google",
     description:
-      "ECS (EDNS Client Subnet) support for CDN-optimized routing. Bypasses the default 1500 QPS cap imposed by Google.",
+      "Upstream to dns.google with ECS support for CDN-optimized routing. Bypasses the default 1500 QPS cap imposed by Google.",
     badge: "Performance" as const,
   },
   {
