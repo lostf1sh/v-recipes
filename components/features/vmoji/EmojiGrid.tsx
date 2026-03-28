@@ -140,24 +140,24 @@ export function EmojiGrid() {
           </div>
 
           {active && (
-            <div className="grid grid-cols-4 gap-1 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8">
               {active.emojis.map((emoji) => (
                 <div
                   key={emoji.shortName}
-                  className="group flex flex-col items-center gap-1.5 rounded-lg p-2 transition-colors hover:bg-[#111]"
+                  className="group flex flex-col items-center gap-2 rounded-lg border border-transparent p-3 transition-all hover:border-[#1a1a1a] hover:bg-[#111]"
                 >
                   <img
                     src={emoji.imageUrl}
                     alt={emoji.shortName}
-                    width={48}
-                    height={48}
+                    width={56}
+                    height={56}
                     loading="lazy"
-                    className="h-12 w-12 object-contain"
+                    className="h-14 w-14 object-contain"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.opacity = "0.3";
                     }}
                   />
-                  <span className="max-w-full truncate text-[10px] text-[#555] group-hover:text-[#888]">
+                  <span className="max-w-full truncate text-[11px] text-[#555] group-hover:text-[#888]">
                     {emoji.shortName}
                   </span>
                 </div>
