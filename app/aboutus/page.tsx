@@ -122,6 +122,38 @@ export default function AboutUsPage() {
 
         <div className="animate-fade-up" style={{ animationDelay: "300ms" }}>
           <Card>
+            <CardTitle>Registered Business Activities (KBLI)</CardTitle>
+            <p className="mt-3 text-[13px] leading-relaxed text-text-secondary">
+              KBLI (<em>Klasifikasi Baku Lapangan Usaha Indonesia</em>) is Indonesia&apos;s
+              official classification of economic activities. The KBLI codes listed for our
+              company describe the principal business activities under which PT VRECIPES
+              AMANAH SEMESTA is registered.
+            </p>
+            <ul className="mt-4 space-y-2">
+              {[
+                ["62012", "Development of e-commerce application software"],
+                ["62013", "Programming & production of immersive media content"],
+                ["62014", "Blockchain technology development"],
+                ["62015", "AI-based software development"],
+                ["62019", "Other computer programming activities"],
+              ].map(([code, desc]) => (
+                <li key={code} className="flex gap-2 text-[13px]">
+                  <span className="mt-0.5 text-accent">&#8226;</span>
+                  <span className="text-text-secondary">
+                    <span className="font-medium text-text-primary">{code}</span> &mdash; {desc}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-[13px] italic text-text-muted">
+              These codes are included for regulatory transparency &mdash; contact us if
+              you need an official extract or further clarification.
+            </p>
+          </Card>
+        </div>
+
+        <div className="animate-fade-up" style={{ animationDelay: "350ms" }}>
+          <Card>
             <CardTitle>Contact Us</CardTitle>
             <CardDescription>
               Questions, feedback, or ideas? Send a note &mdash; we read everything.
