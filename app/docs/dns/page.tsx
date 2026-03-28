@@ -252,7 +252,7 @@ export default function DNSDocsPage() {
               v.recipes uses a multi-layer caching strategy to minimise upstream
               queries and deliver the fastest possible response times.
             </p>
-            <ul className="ml-4 list-disc space-y-2">
+            <ul className="ml-4 list-disc space-y-2 marker:text-accent">
               <li>
                 <strong className="text-text-primary">L1 Cache (Edge)</strong>{" "}
                 &mdash; Each Cloudflare Worker maintains an in-memory cache
@@ -303,7 +303,7 @@ export default function DNSDocsPage() {
               edge to improve DNS outcomes without adding latency. Current
               applications include:
             </p>
-            <ul className="ml-4 list-disc space-y-2">
+            <ul className="ml-4 list-disc space-y-2 marker:text-accent">
               <li>
                 <strong className="text-text-primary">
                   Malicious Domain Detection
@@ -427,7 +427,7 @@ export default function DNSDocsPage() {
               cache, and per-request pacing work together to deliver consistent
               performance regardless of query volume.
             </p>
-            <ul className="ml-4 list-disc space-y-2">
+            <ul className="ml-4 list-disc space-y-2 marker:text-accent">
               <li>
                 <strong className="text-text-primary">Single device</strong>{" "}
                 &mdash; Point your system DNS to v.recipes via DoH for

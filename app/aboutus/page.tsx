@@ -44,7 +44,7 @@ export default function AboutUsPage() {
               We build small, useful tools that solve real problems &mdash; fast,
               reliable, and privacy-minded.
             </CardDescription>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 ml-4 list-disc space-y-2 marker:text-accent">
               {[
                 ["Dependability", "Services you can trust, every day"],
                 ["Speed", "Measured, practical performance wins"],
@@ -52,11 +52,8 @@ export default function AboutUsPage() {
                 ["Practical Innovation", "Experiments that become tools"],
                 ["Accessibility", "Useful for as many people as possible"],
               ].map(([title, desc]) => (
-                <li key={title} className="flex gap-2 text-[13px]">
-                  <span className="mt-0.5 text-accent">&#8226;</span>
-                  <span className="text-text-secondary">
-                    <span className="font-medium text-text-primary">{title}</span> &mdash; {desc}
-                  </span>
+                <li key={title} className="text-[13px] text-text-secondary">
+                  <span className="font-medium text-text-primary">{title}</span> &mdash; {desc}
                 </li>
               ))}
             </ul>
@@ -66,7 +63,7 @@ export default function AboutUsPage() {
         <div className="animate-fade-up" style={{ animationDelay: "150ms" }}>
           <Card>
             <CardTitle>Our Values</CardTitle>
-            <ul className="mt-4 space-y-2.5">
+            <ul className="mt-4 ml-4 list-disc space-y-2 marker:text-accent">
               {[
                 ["Be helpful", "Always ship value to users"],
                 ["Be honest", "Clear, accurate communication"],
@@ -74,11 +71,8 @@ export default function AboutUsPage() {
                 ["Work together", "Open feedback and collaboration"],
                 ["Keep learning", "Iterate fast and improve"],
               ].map(([title, desc]) => (
-                <li key={title} className="flex gap-2 text-[13px]">
-                  <span className="mt-0.5 text-accent">&#8226;</span>
-                  <span className="text-text-secondary">
-                    <span className="font-medium text-text-primary">{title}</span> &mdash; {desc}
-                  </span>
+                <li key={title} className="text-[13px] text-text-secondary">
+                  <span className="font-medium text-text-primary">{title}</span> &mdash; {desc}
                 </li>
               ))}
             </ul>
@@ -129,7 +123,7 @@ export default function AboutUsPage() {
               company describe the principal business activities under which PT VRECIPES
               AMANAH SEMESTA is registered.
             </p>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 ml-4 list-disc space-y-2 marker:text-accent">
               {[
                 ["62012", "Development of e-commerce application software"],
                 ["62013", "Programming & production of immersive media content"],
@@ -137,11 +131,8 @@ export default function AboutUsPage() {
                 ["62015", "AI-based software development"],
                 ["62019", "Other computer programming activities"],
               ].map(([code, desc]) => (
-                <li key={code} className="flex gap-2 text-[13px]">
-                  <span className="mt-0.5 text-accent">&#8226;</span>
-                  <span className="text-text-secondary">
-                    <span className="font-medium text-text-primary">{code}</span> &mdash; {desc}
-                  </span>
+                <li key={code} className="text-[13px] text-text-secondary">
+                  <span className="font-medium text-text-primary">{code}</span> &mdash; {desc}
                 </li>
               ))}
             </ul>
