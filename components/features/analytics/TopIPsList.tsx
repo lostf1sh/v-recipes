@@ -120,7 +120,7 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
       </h3>
       <div className="space-y-2">
         {sorted.map((entry) => {
-          const isExpanded = expandedIP === entry.ip;
+          const isExpanded = expandedIP === entry.originalIP;
           const pct = totalCount > 0 ? (entry.count / totalCount) * 100 : 0;
           return (
             <div
