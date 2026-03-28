@@ -58,7 +58,8 @@ export default function HomePage() {
           className="animate-fade-up mt-4 max-w-2xl text-[clamp(2.25rem,5.5vw,4rem)] font-bold leading-[1.05] tracking-[-0.035em] text-white"
           style={{ animationDelay: "80ms" }}
         >
-          Small team.{" "}
+          Small team.
+          <br />
           <span className="bg-gradient-to-r from-text-secondary to-text-muted bg-clip-text text-transparent">
             Big curiosity.
           </span>
