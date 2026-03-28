@@ -309,13 +309,13 @@ export default function VmojiPage() {
         <div className="mb-6 animate-fade-up" style={{ animationDelay: "450ms" }}>
           <h2 className="text-sm font-medium text-text-primary">Available Commands</h2>
           <p className="mt-1 text-[13px] text-text-muted">
-            vmoji keeps things simple with just two commands.
+            Three commands to search, browse, and get help.
           </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-3">
           {commands.map((cmd, i) => (
             <div key={cmd.name} className="animate-fade-up" style={{ animationDelay: `${500 + i * 50}ms` }}>
-              <Card hover>
+              <Card hover className="h-full">
                 <div className="flex items-start justify-between">
                   <code className="rounded-md border border-border bg-background px-2.5 py-1 text-[12px] font-mono text-[#5865F2]">
                     {cmd.name}
