@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { DNSVariantsSection } from "./DNSVariantsSection";
+import { RoutingIndicator } from "@/components/features/dns/RoutingIndicator";
 
 export const metadata: Metadata = {
   title: "DNS",
@@ -66,6 +67,7 @@ export default function DNSPage() {
           Reliable, fast, and secure DNS service with privacy-focused resolution
           and global anycast coverage.
         </p>
+        <RoutingIndicator />
       </header>
 
       {/* Features Grid */}

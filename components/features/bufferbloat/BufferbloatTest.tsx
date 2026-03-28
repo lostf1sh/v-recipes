@@ -20,7 +20,7 @@ import { cn } from "@/lib/cn";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function loadSpeedTestLib(): Promise<any> {
   const mod = await (Function(
-    'return import("https://b.v.recipes/cdn.skypack.dev/@cloudflare/speedtest")'
+    'return import("https://cdn.skypack.dev/@cloudflare/speedtest")'
   )());
   return mod.default;
 }
