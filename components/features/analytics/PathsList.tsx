@@ -1,7 +1,7 @@
 "use client";
 
 import type { PathEntry } from "@/lib/types";
-import { formatNumber } from "@/lib/format";
+import { formatNumber, formatBytes } from "@/lib/format";
 
 interface PathsListProps {
   data: PathEntry[];
@@ -25,9 +25,15 @@ export function PathsList({ data }: PathsListProps) {
               <span className="min-w-0 truncate font-mono text-xs text-[#888888]">
                 {entry.path}
               </span>
-              <span className="shrink-0 text-xs tabular-nums text-[#555555]">
-                {formatNumber(entry.requests)} ({totalRequests > 0 ? ((entry.requests / totalRequests) * 100).toFixed(1) : "0.0"}%)
-              </span>
+              <div className="flex shrink-0 flex-col items-end">
+                <span className="text-xs tabular-nums">
+                  <span className="text-[#3f83f8]">{formatNumber(entry.requests)}</span>
+                  <span className="text-[#555555]"> ({totalRequests > 0 ? ((entry.requests / totalRequests) * 100).toFixed(1) : "0.0"}%)</span>
+                </span>
+                <span className="text-[10px] tabular-nums text-[#555555]">
+                  {formatBytes(entry.bytes)}
+                </span>
+              </div>
             </div>
             <div className="h-1.5 overflow-hidden rounded-full bg-[#111111]">
               <div

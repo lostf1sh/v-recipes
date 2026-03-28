@@ -10,6 +10,12 @@ const versionConfig: Record<string, { color: string; label: string }> = {
   "HTTP/3":   { color: "#10b981", label: "HTTP/3" },
 };
 
+function formatPercentage(pct: number): string {
+  if (pct >= 1) return `${pct.toFixed(1)}%`;
+  if (pct >= 0.01) return `${pct.toFixed(2)}%`;
+  return `${pct}%`;
+}
+
 interface HTTPVersionBarsProps {
   data: HTTPVersionEntry[];
 }
@@ -21,9 +27,16 @@ export function HTTPVersionBars({ data }: HTTPVersionBarsProps) {
 
   return (
     <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-      <h3 className="mb-4 text-lg font-bold text-[#ededed]">
-        Client HTTP Version Used
-      </h3>
+      <div className="mb-4 flex items-baseline justify-between">
+        <h3 className="text-lg font-bold text-[#ededed]">
+          Client HTTP Version Used
+        </h3>
+        {totalRequests > 0 && (
+          <span className="text-xs tabular-nums text-[#555555]">
+            {formatNumber(totalRequests)} total requests
+          </span>
+        )}
+      </div>
 
       {/* Stacked bar */}
       {totalRequests > 0 && (
@@ -55,19 +68,21 @@ export function HTTPVersionBars({ data }: HTTPVersionBarsProps) {
                   className="h-3 w-3 rounded-sm"
                   style={{ backgroundColor: cfg.color }}
                 />
-                <span className="text-sm font-medium text-[#ededed]">
-                  {cfg.label}
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-[#ededed]">
+                    {cfg.label}
+                  </span>
+                  <span className="text-[10px] tabular-nums text-[#555555]">
+                    {formatNumber(entry.requests)} requests
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-xs tabular-nums">
-                <span className="text-[#888888]">{formatNumber(entry.requests)}</span>
-                <span
-                  className="min-w-[3.5rem] text-right font-semibold"
-                  style={{ color: cfg.color }}
-                >
-                  {entry.percentage.toFixed(1)}%
-                </span>
-              </div>
+              <span
+                className="min-w-[4rem] text-right text-xs font-semibold tabular-nums"
+                style={{ color: cfg.color }}
+              >
+                {formatPercentage(entry.percentage)}
+              </span>
             </div>
           );
         })}

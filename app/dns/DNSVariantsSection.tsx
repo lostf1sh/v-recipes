@@ -50,14 +50,16 @@ const variants = [
   {
     name: "Accelerator",
     endpoint: "https://v.recipes/dns/(provider)",
-    description: "Fast DNS with any DoH provider as upstream",
+    description: "Fast and predictable DNS with any DoH provider. Useful if your upstream is located far from your country.",
+    example: "https://v.recipes/dns/dns.google/dns-query",
     isCustom: true,
     customVariant: "Accelerator" as const,
   },
   {
     name: "Multiqueue",
     endpoint: "https://v.recipes/mq/(providers)",
-    description: "Query multiple upstream providers simultaneously",
+    description: "Query multiple upstream providers simultaneously. Specify more than one upstream by adding /mq/ between them.",
+    example: "https://v.recipes/mq/dns.google/dns-query/mq/freedns.controld.com/p0",
     badge: "Advanced" as const,
     isCustom: true,
     customVariant: "Multiqueue" as const,
@@ -87,6 +89,11 @@ export function DNSVariantsSection() {
                     {variant.badge && <Badge variant="accent">{variant.badge}</Badge>}
                   </div>
                   <p className="mt-0.5 text-[13px] text-text-secondary">{variant.description}</p>
+                  {variant.example && (
+                    <p className="mt-1 text-[12px] text-text-muted">
+                      Example: <code className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[11px] text-text-secondary">{variant.example}</code>
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <IOSConfigButton

@@ -11,6 +11,7 @@ import { HTTPVersionBars } from "@/components/features/analytics/HTTPVersionBars
 import { CountryBars } from "@/components/features/analytics/CountryBars";
 import { PathsList } from "@/components/features/analytics/PathsList";
 import { TopIPsList } from "@/components/features/analytics/TopIPsList";
+import { EstimatedUsage } from "@/components/features/analytics/EstimatedUsage";
 import { AnalyticsSkeleton } from "@/components/features/analytics/AnalyticsSkeleton";
 
 export default function AnalyticsPage() {
@@ -60,6 +61,8 @@ export default function AnalyticsPage() {
             totalDataCached={data.totalDataCached}
             cachedPercentage={data.cachedPercentage}
           />
+
+          <EstimatedUsage range={range} />
 
           <div className="grid gap-6 lg:grid-cols-2">
             <RequestsChart data={data.timeSeries} />

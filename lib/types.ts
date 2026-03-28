@@ -113,6 +113,28 @@ export interface HTTPVersionsResponse {
   range: string;
 }
 
+// Per-IP usage data from /dataperip
+export interface DataPerIPPathStat {
+  count: number;
+  methods: string[];
+  protocols: string[];
+  cacheHits: number;
+  cacheMisses: number;
+  lastAccessed: string;
+  cacheHitRate: string;
+}
+
+export interface DataPerIPResponse {
+  totalRequests: number;
+  uniquePathsCount: number;
+  pathStats: Record<string, DataPerIPPathStat>;
+  range: string;
+  clientIP: string;
+  clientASN: string;
+  clientASNDescription: string;
+  dataCollectedAt: string;
+}
+
 // Aggregated dashboard state
 export interface AnalyticsData {
   timeSeries: DataPoint[];

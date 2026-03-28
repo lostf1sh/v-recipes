@@ -1,7 +1,7 @@
 "use client";
 
 import type { CountryEntry } from "@/lib/types";
-import { formatNumber } from "@/lib/format";
+import { formatNumber, formatBytes } from "@/lib/format";
 
 const FLAG_BASE = "https://b.v.recipes/flagcdn.com/16x12";
 
@@ -79,9 +79,14 @@ export function CountryBars({ data }: CountryBarsProps) {
                   )}
                   <span className="truncate">{fullName}</span>
                 </span>
-                <span className="ml-2 shrink-0 text-xs tabular-nums text-[#555555]">
-                  {formatNumber(entry.requests)} ({pct.toFixed(1)}%)
-                </span>
+                <div className="ml-2 flex shrink-0 flex-col items-end">
+                  <span className="text-xs tabular-nums text-[#3f83f8]">
+                    {formatNumber(entry.requests)} requests
+                  </span>
+                  <span className="text-[10px] tabular-nums text-[#555555]">
+                    {formatBytes(entry.bytes)}
+                  </span>
+                </div>
               </div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[#111111]">
                 <div

@@ -33,6 +33,10 @@ function IPDetailsPanel({ ip, range }: IPDetailsPanelProps) {
     );
   }
 
+  const colos = details.colos ?? [];
+  const showColos = colos.length > 8 ? colos.slice(0, 7) : colos;
+  const extraColosCount = colos.length > 8 ? colos.length - 7 : 0;
+
   return (
     <div className="mt-3 border-t border-[#1a1a1a] pt-3">
       <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:grid-cols-4">
@@ -42,23 +46,48 @@ function IPDetailsPanel({ ip, range }: IPDetailsPanelProps) {
         </div>
         <div>
           <span className="text-[#555555]">ASN</span>
-          <p className="truncate font-medium text-[#ededed]">{details.asnDesc || details.asn || "Unknown"}</p>
+          <p className="truncate font-medium text-[#ededed]">
+            {details.asn ? `AS${details.asn}` : "Unknown"}
+            {details.asnDesc ? ` - ${details.asnDesc}` : ""}
+          </p>
         </div>
         <div>
           <span className="text-[#555555]">Sampled</span>
           <p className="font-medium text-[#ededed]">{formatNumber(details.sampledCount)}</p>
         </div>
         <div>
-          <span className="text-[#555555]">Colos</span>
-          <p className="truncate font-medium text-[#ededed]">{details.colos?.slice(0, 5).join(", ") || "—"}</p>
+          <span className="text-[#555555]">IP</span>
+          <p className="truncate font-mono font-medium text-[#ededed]">{details.ip || ip}</p>
         </div>
       </div>
+
+      {/* Datacenter locations */}
+      {colos.length > 0 && (
+        <div className="mt-3">
+          <p className="mb-1.5 text-xs font-medium text-[#555555]">Datacenter Locations</p>
+          <div className="flex flex-wrap gap-1.5">
+            {showColos.map((colo) => (
+              <span
+                key={colo}
+                className="rounded-full bg-[#1a1a1a] px-2 py-0.5 text-[10px] font-medium tabular-nums text-[#888888]"
+              >
+                {colo}
+              </span>
+            ))}
+            {extraColosCount > 0 && (
+              <span className="rounded-full bg-[#1a1a1a] px-2 py-0.5 text-[10px] font-medium text-[#555555]">
+                +{extraColosCount}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {details.paths && details.paths.length > 0 && (
         <div className="mt-3">
           <p className="mb-1.5 text-xs font-medium text-[#555555]">Top Paths</p>
           <div className="space-y-1">
-            {details.paths.slice(0, 5).map((p) => (
+            {details.paths.slice(0, 8).map((p) => (
               <div key={p.path} className="flex items-center justify-between text-xs">
                 <span className="min-w-0 truncate font-mono text-[#888888]">{p.path}</span>
                 <span className="ml-2 shrink-0 tabular-nums text-[#555555]">
