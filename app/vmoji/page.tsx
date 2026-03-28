@@ -147,8 +147,17 @@ const advancedFeatures = [
 export default function VmojiPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-20">
+      {/* Banner */}
+      <div className="mb-12 animate-fade-up overflow-hidden rounded-lg">
+        <img
+          src="/vmoji-banner.png"
+          alt="vmoji banner"
+          className="w-full"
+        />
+      </div>
+
       {/* Header */}
-      <header className="mb-20 animate-fade-up text-center">
+      <header className="mb-20 animate-fade-up text-center" style={{ animationDelay: "50ms" }}>
         <Badge variant="accent" className="mb-4">
           Discord App
         </Badge>
