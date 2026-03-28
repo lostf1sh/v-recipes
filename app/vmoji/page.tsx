@@ -87,8 +87,14 @@ const commands = [
   {
     name: "/emoji [query]",
     description:
-      "Search and send any emoji by name. Autocomplete suggestions appear as you type.",
+      "Search and send any emoji by name. Autocomplete suggestions appear as you type. Add browse:true to open the visual browser.",
     badge: "Core",
+  },
+  {
+    name: "/browse",
+    description:
+      "Open the visual emoji browser to explore all categories and packs interactively.",
+    badge: "Browse",
   },
 ];
 
