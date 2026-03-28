@@ -139,15 +139,26 @@ function IncidentCard({ item, timePrefix }: { item: CfIncident; timePrefix: stri
   const upd = item.incident_updates?.[0];
   const body = upd?.body ?? "";
   const long = body.length > 150;
-  const borderCls = item.impact === "critical" ? "border-l-red-500" : item.impact === "major" ? "border-l-orange-500" : "border-l-[#333]";
+  const impactStyles = {
+    critical: { border: "border-l-red-500", badge: "border-red-500/30 bg-red-500/10 text-red-400" },
+    major:    { border: "border-l-orange-500", badge: "border-orange-500/30 bg-orange-500/10 text-orange-400" },
+    minor:    { border: "border-l-amber-500", badge: "border-amber-500/30 bg-amber-500/10 text-amber-400" },
+    none:     { border: "border-l-[#333]", badge: "border-[#333] bg-[#111] text-[#888]" },
+  }[item.impact] ?? { border: "border-l-[#333]", badge: "border-[#333] bg-[#111] text-[#888]" };
+
+  const statusLabel = item.status?.replace(/_/g, " ") ?? "";
 
   return (
-    <div className={cn("border-l-2 py-2.5 pl-4", borderCls)}>
+    <div className={cn("border-l-2 py-2.5 pl-4", impactStyles.border)}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-[13px] font-medium text-[#ededed]">
           {item.shortlink ? <a href={item.shortlink} target="_blank" rel="noopener noreferrer" className="hover:text-[#3f83f8] transition-colors">{item.name}</a> : item.name}
         </p>
-        <span className="shrink-0 text-[11px] capitalize text-[#555]">{item.status?.replace(/_/g, " ")}</span>
+        {statusLabel && (
+          <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium capitalize", impactStyles.badge)}>
+            {statusLabel}
+          </span>
+        )}
       </div>
       {upd?.created_at && <p className="mt-0.5 text-[11px] text-[#555]">{timePrefix} {relTime(upd.created_at)}</p>}
       {item.components && item.components.length > 0 && (
@@ -185,8 +196,10 @@ function MaintCard({ m }: { m: CfMaintenance }) {
     timeStr = `Scheduled: ${relTime(m.scheduled_for)}`;
   }
 
+  const borderCls = m.impact === "critical" ? "border-l-red-500" : m.impact === "major" ? "border-l-orange-500" : m.impact === "minor" ? "border-l-amber-500" : "border-l-[#333]";
+
   return (
-    <div className="border-l-2 border-l-[#333] py-2.5 pl-4">
+    <div className={cn("border-l-2 py-2.5 pl-4", borderCls)}>
       <p className="text-[13px] font-medium text-[#ededed]">{m.name}</p>
       {timeStr && <p className="mt-0.5 text-[11px] text-[#555]">{timeStr}</p>}
       {m.components && m.components.length > 0 && (
