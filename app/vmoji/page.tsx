@@ -148,12 +148,13 @@ export default function VmojiPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-6 py-20">
       {/* Banner */}
-      <div className="mb-12 animate-fade-up overflow-hidden rounded-lg">
+      <div className="relative mb-12 animate-fade-up overflow-hidden rounded-lg">
         <img
           src="/vmoji-banner.jpg"
           alt="vmoji banner"
           className="w-full"
         />
+        <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Header */}
