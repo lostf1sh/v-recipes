@@ -114,7 +114,7 @@ export default function DNSPage() {
             </a>
           </div>
           <div className="animate-fade-up" style={{ animationDelay: "650ms" }}>
-            <a href="https://t.me/vaborrecipesbot" target="_blank" rel="noopener noreferrer">
+            <a href="https://t.me/vDNSBot" target="_blank" rel="noopener noreferrer">
               <Card hover className="flex items-center gap-4">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#0088cc]/10 text-[#0088cc]">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
