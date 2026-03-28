@@ -82,6 +82,19 @@ function groupComps(summary: CfSummary): CompGroup[] {
   return Object.values(map);
 }
 
+const IMPACT_STYLES: Record<string, { border: string; badge: string }> = {
+  critical:    { border: "border-l-red-500",    badge: "border-red-500/30 bg-red-500/10 text-red-400" },
+  major:       { border: "border-l-orange-500", badge: "border-orange-500/30 bg-orange-500/10 text-orange-400" },
+  minor:       { border: "border-l-amber-500",  badge: "border-amber-500/30 bg-amber-500/10 text-amber-400" },
+  maintenance: { border: "border-l-[#3f83f8]",  badge: "border-[#3f83f8]/30 bg-[#3f83f8]/10 text-[#3f83f8]" },
+  none:        { border: "border-l-[#333]",      badge: "border-[#333] bg-[#111] text-[#888]" },
+};
+
+function getImpactStyle(impact: string | undefined) {
+  if (!impact) return IMPACT_STYLES.none;
+  return IMPACT_STYLES[impact] ?? IMPACT_STYLES.none;
+}
+
 /* ------------------------------------------------------------------ */
 /* Sub-components                                                      */
 /* ------------------------------------------------------------------ */
@@ -139,12 +152,7 @@ function IncidentCard({ item, timePrefix }: { item: CfIncident; timePrefix: stri
   const upd = item.incident_updates?.[0];
   const body = upd?.body ?? "";
   const long = body.length > 150;
-  const impactStyles = {
-    critical: { border: "border-l-red-500", badge: "border-red-500/30 bg-red-500/10 text-red-400" },
-    major:    { border: "border-l-orange-500", badge: "border-orange-500/30 bg-orange-500/10 text-orange-400" },
-    minor:    { border: "border-l-amber-500", badge: "border-amber-500/30 bg-amber-500/10 text-amber-400" },
-    none:     { border: "border-l-[#333]", badge: "border-[#333] bg-[#111] text-[#888]" },
-  }[item.impact] ?? { border: "border-l-[#333]", badge: "border-[#333] bg-[#111] text-[#888]" };
+  const impactStyles = getImpactStyle(item.impact);
 
   const statusLabel = item.status?.replace(/_/g, " ") ?? "";
 
@@ -196,10 +204,10 @@ function MaintCard({ m }: { m: CfMaintenance }) {
     timeStr = `Scheduled: ${relTime(m.scheduled_for)}`;
   }
 
-  const borderCls = m.impact === "critical" ? "border-l-red-500" : m.impact === "major" ? "border-l-orange-500" : m.impact === "minor" ? "border-l-amber-500" : "border-l-[#333]";
+  const impactStyle = getImpactStyle(m.impact);
 
   return (
-    <div className={cn("border-l-2 py-2.5 pl-4", borderCls)}>
+    <div className={cn("border-l-2 py-2.5 pl-4", impactStyle.border)}>
       <p className="text-[13px] font-medium text-[#ededed]">{m.name}</p>
       {timeStr && <p className="mt-0.5 text-[11px] text-[#555]">{timeStr}</p>}
       {m.components && m.components.length > 0 && (
