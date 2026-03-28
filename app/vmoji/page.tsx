@@ -150,7 +150,7 @@ export default function VmojiPage() {
       {/* Banner */}
       <div className="mb-12 animate-fade-up overflow-hidden rounded-lg">
         <img
-          src="/vmoji-banner.png"
+          src="/vmoji-banner.jpg"
           alt="vmoji banner"
           className="w-full"
         />
