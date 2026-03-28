@@ -2,54 +2,64 @@
 
 import { useEffect, useState } from "react";
 
-// Common Cloudflare colo codes to city names
-const COLO_NAMES: Record<string, string> = {
-  AMS: "Amsterdam", ATL: "Atlanta", BOS: "Boston", CDG: "Paris", DEN: "Denver",
-  DFW: "Dallas", EWR: "Newark", FRA: "Frankfurt", GRU: "São Paulo",
-  HKG: "Hong Kong", IAD: "Ashburn", IAH: "Houston", ICN: "Seoul",
-  JNB: "Johannesburg", LAX: "Los Angeles", LHR: "London", MIA: "Miami",
-  NRT: "Tokyo", ORD: "Chicago", PHX: "Phoenix", SEA: "Seattle",
-  SIN: "Singapore", SJC: "San Jose", SYD: "Sydney", YYZ: "Toronto",
-  IST: "Istanbul", BOM: "Mumbai", DEL: "Delhi", MEL: "Melbourne",
-  MXP: "Milan", ARN: "Stockholm", WAW: "Warsaw", VIE: "Vienna",
-  ZRH: "Zurich", MAD: "Madrid", LIS: "Lisbon", OSL: "Oslo",
-  HEL: "Helsinki", CPH: "Copenhagen", DUB: "Dublin", BRU: "Brussels",
-  MNL: "Manila", KUL: "Kuala Lumpur", BKK: "Bangkok", CGK: "Jakarta",
-  TPE: "Taipei", KIX: "Osaka", NVT: "Navegantes",
-};
-
-function coloToCity(colo: string): string {
-  return COLO_NAMES[colo] ?? colo;
+interface RouteInfo {
+  userRoute: string;
+  serverRoute: string;
 }
 
-interface TraceData {
-  city: string;
-  colo: string;
+/**
+ * Build colo code → name map from Cloudflare Status API components.
+ * Components have names like "Istanbul, Turkey - (IST)" or "Frankfurt - (FRA)"
+ */
+function buildColoMap(components: { name: string }[]): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const c of components) {
+    const match = c.name.match(/\(([A-Z0-9]{3,5})\)/);
+    if (!match) continue;
+    const code = match[1];
+    const name = c.name
+      .split(`(${code})`)[0]
+      .replace(/\s*-\s*$/, "")
+      .trim();
+    if (code && name) map[code] = name;
+  }
+  return map;
+}
+
+function formatColo(coloMap: Record<string, string>, code: string, fallback: string): string {
+  if (!code) return fallback;
+  const name = coloMap[code];
+  return name ? `${name} (${code})` : `${code}`;
 }
 
 export function RoutingIndicator() {
-  const [data, setData] = useState<TraceData | null>(null);
+  const [route, setRoute] = useState<RouteInfo | null>(null);
 
   useEffect(() => {
-    fetch("/api/trace")
-      .then((r) => r.json())
-      .then((d) => setData({ city: d.city ?? "", colo: d.colo ?? "" }))
-      .catch(() => {});
+    Promise.all([
+      fetch("/api/trace").then((r) => r.json()).catch(() => ({})),
+      fetch("/api/cfstatus/components.json").then((r) => r.json()).catch(() => ({ components: [] })),
+    ]).then(([trace, status]) => {
+      const coloMap = buildColoMap(status.components ?? []);
+      const colo = trace.colo ?? "";
+
+      setRoute({
+        userRoute: formatColo(coloMap, colo, "Unknown Location"),
+        serverRoute: formatColo(coloMap, colo, "Unknown Server"),
+      });
+    });
   }, []);
 
-  if (!data) return null;
-
-  const coloCity = coloToCity(data.colo);
-  const userCity = data.city || "your location";
+  if (!route) return null;
 
   return (
     <div className="animate-fade-up mt-6 text-center text-[13px]" style={{ animationDelay: "100ms" }}>
       <p className="text-[#888]">
         Your ISP routed you through{" "}
-        <span className="font-medium text-[#3f83f8]">{coloCity} ({data.colo})</span>.
+        <span className="font-medium text-[#3f83f8]">{route.userRoute}</span>.
       </p>
       <p className="text-[#888]">
-        We have processed your request in {coloCity} ({data.colo}).
+        We have processed your request in {route.serverRoute}.
       </p>
       <p className="mt-1 text-[11px] italic text-[#555]">
         These are separate indicators that tell you where your request originated and where it was handled.
