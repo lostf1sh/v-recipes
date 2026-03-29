@@ -1,35 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { buildColoMap, formatEdgeColoLabel } from "@/lib/cfColo";
 
 interface RouteInfo {
   userRoute: string;
   serverRoute: string;
 }
 
-/**
- * Build colo code → name map from Cloudflare Status API components.
- * Components have names like "Istanbul, Turkey - (IST)" or "Frankfurt - (FRA)"
- */
-function buildColoMap(components: { name: string }[]): Record<string, string> {
-  const map: Record<string, string> = {};
-  for (const c of components) {
-    const match = c.name.match(/\(([A-Z0-9]{3,5})\)/);
-    if (!match) continue;
-    const code = match[1];
-    const name = c.name
-      .split(`(${code})`)[0]
-      .replace(/\s*-\s*$/, "")
-      .trim();
-    if (code && name) map[code] = name;
-  }
-  return map;
-}
-
 function formatColo(coloMap: Record<string, string>, code: string, fallback: string): string {
   if (!code) return fallback;
-  const name = coloMap[code];
-  return name ? `${name} (${code})` : `${code}`;
+  return formatEdgeColoLabel(coloMap, code);
 }
 
 export function RoutingIndicator() {
