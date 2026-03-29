@@ -108,7 +108,7 @@ export default function DNSPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-text-primary">vDNS on Discord</h3>
-                  <p className="text-[13px] text-text-secondary">Use <code className="font-mono text-accent">/dns</code> command in any server</p>
+                  <p className="text-[13px] text-text-secondary">Use <code className="font-mono text-accent">/dns</code> command in any server.</p>
                 </div>
               </Card>
             </a>
@@ -123,7 +123,7 @@ export default function DNSPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-text-primary">vDNS on Telegram</h3>
-                  <p className="text-[13px] text-text-secondary">Use <code className="font-mono text-accent">/help</code> to get started</p>
+                  <p className="text-[13px] text-text-secondary">Use <code className="font-mono text-accent">/help</code> to get started.</p>
                 </div>
               </Card>
             </a>

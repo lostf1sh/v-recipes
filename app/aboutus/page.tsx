@@ -23,6 +23,18 @@ export default function AboutUsPage() {
       <div className="space-y-3">
         <div className="animate-fade-up" style={{ animationDelay: "50ms" }}>
           <Card>
+            <CardTitle>Who We Are</CardTitle>
+            <CardDescription>
+              We&apos;re a small team of engineers and operators based in Jakarta,
+              Indonesia. Our work spans networking, backend systems, frontend UI, and
+              machine learning. We keep the feedback loop short and prioritize real user
+              impact over anything else.
+            </CardDescription>
+          </Card>
+        </div>
+
+        <div className="animate-fade-up" style={{ animationDelay: "100ms" }}>
+          <Card>
             <CardTitle>Our Story</CardTitle>
             <CardDescription>
               We started as a group of engineers solving real web problems. DNS was our
@@ -37,7 +49,7 @@ export default function AboutUsPage() {
           </Card>
         </div>
 
-        <div className="animate-fade-up" style={{ animationDelay: "100ms" }}>
+        <div className="animate-fade-up" style={{ animationDelay: "150ms" }}>
           <Card>
             <CardTitle>Our Mission</CardTitle>
             <CardDescription>
@@ -60,7 +72,7 @@ export default function AboutUsPage() {
           </Card>
         </div>
 
-        <div className="animate-fade-up" style={{ animationDelay: "150ms" }}>
+        <div className="animate-fade-up" style={{ animationDelay: "200ms" }}>
           <Card>
             <CardTitle>Our Values</CardTitle>
             <ul className="mt-4 ml-4 list-disc space-y-2 marker:text-accent">
@@ -76,18 +88,6 @@ export default function AboutUsPage() {
                 </li>
               ))}
             </ul>
-          </Card>
-        </div>
-
-        <div className="animate-fade-up" style={{ animationDelay: "200ms" }}>
-          <Card>
-            <CardTitle>Who We Are</CardTitle>
-            <CardDescription>
-              We&apos;re a small team of engineers and operators based in Jakarta,
-              Indonesia. Our work spans networking, backend systems, frontend UI, and
-              machine learning. We keep the feedback loop short and prioritize real user
-              impact over anything else.
-            </CardDescription>
           </Card>
         </div>
 
