@@ -38,7 +38,12 @@ export const metadata: Metadata = {
       "Small team, big curiosity. Privacy-focused DNS, network tools, and developer experiments.",
   },
   icons: {
-    icon: "https://v.recipes/assets/internal/vrecipeslogo1.png",
+    icon: [
+      {
+        url: "https://v.recipes/assets/internal/vrecipeslogo1.png",
+        type: "image/x-icon",
+      },
+    ],
   },
 };
 

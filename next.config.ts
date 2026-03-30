@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "b.v.recipes",
+        hostname: "flagcdn.com",
       },
       {
         protocol: "https",

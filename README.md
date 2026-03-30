@@ -67,7 +67,7 @@ All external API calls are proxied through Next.js route handlers to avoid CORS 
 | `/api/cfstatus/*` | `cloudflarestatus.com/api/v2/*` | Cloudflare network status |
 | `/api/trace` | CF trace + ipinfo.io | Connection info (IP, ISP, location) |
 
-External client-side resources (speedtest library, country flags) are loaded through `b.v.recipes` proxy for accessibility in all regions.
+`b.v.recipes` is reserved for proxied third-party CSS, JavaScript, and font assets, matching how the old site used it for things like Google Fonts and CDN-hosted scripts. The current Next.js app does not presently ship runtime CSS/JS/font links that need that proxy: app styles are bundled locally, libraries are installed via npm, and Geist is self-hosted at build time. Image assets should not use `b.v.recipes`; in the current app, Discord emoji assets are served from `cdn.discordapp.com` and country flags are served from `flagcdn.com`.
 
 ## License
 

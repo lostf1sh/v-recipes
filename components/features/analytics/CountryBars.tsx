@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { CountryEntry } from "@/lib/types";
 import { formatNumber, formatBytes } from "@/lib/format";
 
-const FLAG_BASE = "https://b.v.recipes/flagcdn.com/16x12";
+const FLAG_BASE = "https://flagcdn.com/16x12";
 
 // Map common ISO codes to full country names
 const countryNames: Record<string, string> = {
