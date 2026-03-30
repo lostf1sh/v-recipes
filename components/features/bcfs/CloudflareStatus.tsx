@@ -103,16 +103,12 @@ function CompGroupCard({ g }: { g: CompGroup }) {
   const isServices = g.group.name === "Cloudflare Sites and Services";
   const label = isServices ? "service" : "location";
   const issues = g.components.filter(c => c.status !== "operational").length;
-  const INITIAL_SHOW = 12;
-  const [showAll, setShowAll] = useState(g.components.length <= INITIAL_SHOW);
 
   // Always show issues first, then operational
   const sorted = [
     ...g.components.filter(c => c.status !== "operational"),
     ...g.components.filter(c => c.status === "operational"),
   ];
-  const visible = showAll ? sorted : sorted.slice(0, INITIAL_SHOW);
-  const hiddenCount = sorted.length - visible.length;
 
   return (
     <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5">
@@ -128,21 +124,13 @@ function CompGroupCard({ g }: { g: CompGroup }) {
         </div>
       </div>
       <div>
-        {visible.map(c => (
+        {sorted.map(c => (
           <div key={c.id} className="flex items-center justify-between border-t border-[#1a1a1a] py-2.5 first:border-0 first:pt-0">
             <span className="truncate text-[13px] text-[#888]">{c.name}</span>
             {statusBadge(c.status)}
           </div>
         ))}
       </div>
-      {hiddenCount > 0 && (
-        <button
-          onClick={() => setShowAll(true)}
-          className="mt-3 w-full rounded-md bg-[#111] py-2 text-[12px] text-[#3f83f8] transition-colors hover:bg-[#1a1a1a] cursor-pointer"
-        >
-          Show {hiddenCount} more {label}{hiddenCount !== 1 ? "s" : ""}
-        </button>
-      )}
     </div>
   );
 }
