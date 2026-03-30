@@ -15,12 +15,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://v.recipes"),
   title: {
     default: "v.recipes",
     template: "%s | v.recipes",
   },
   description:
     "Small team, big curiosity. Privacy-focused DNS, network tools, and developer experiments.",
+  applicationName: "v.recipes",
+  openGraph: {
+    title: "v.recipes",
+    description:
+      "Small team, big curiosity. Privacy-focused DNS, network tools, and developer experiments.",
+    siteName: "v.recipes",
+    type: "website",
+    url: "https://v.recipes",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "v.recipes",
+    description:
+      "Small team, big curiosity. Privacy-focused DNS, network tools, and developer experiments.",
+  },
+  icons: {
+    icon: "https://v.recipes/assets/internal/vrecipeslogo1.png",
+  },
 };
 
 export default function RootLayout({
@@ -34,8 +53,16 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="flex min-h-full flex-col antialiased">
+        <a
+          href="#main-content"
+          className="skip-link"
+        >
+          Skip to content
+        </a>
         <Header />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

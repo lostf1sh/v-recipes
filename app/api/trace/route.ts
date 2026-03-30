@@ -9,6 +9,7 @@ export async function GET() {
     traceResult.status === "fulfilled" ? traceResult.value : {};
   const ipinfo =
     ipinfoResult.status === "fulfilled" ? ipinfoResult.value : {};
+  const [latitude, longitude] = parseCoordinates(ipinfo.loc);
 
   const merged = {
     ip: trace.ip ?? ipinfo.ip ?? "Unknown",
@@ -18,6 +19,8 @@ export async function GET() {
     city: ipinfo.city ?? "",
     region: ipinfo.region ?? "",
     country: ipinfo.country ?? trace.loc ?? "",
+    latitude,
+    longitude,
     warp: trace.warp ?? "off",
     http: trace.http ?? "",
   };
@@ -61,4 +64,15 @@ async function fetchIpinfo(): Promise<Record<string, string>> {
   } catch {
     return {};
   }
+}
+
+function parseCoordinates(loc?: string): [number | null, number | null] {
+  if (!loc) return [null, null];
+
+  const [lat, lon] = loc.split(",").map((value) => Number(value.trim()));
+  if (Number.isNaN(lat) || Number.isNaN(lon)) {
+    return [null, null];
+  }
+
+  return [lat, lon];
 }

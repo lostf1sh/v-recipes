@@ -39,28 +39,36 @@ interface RequestsChartProps {
   data: DataPoint[];
 }
 
+const tooltipStyle = {
+  backgroundColor: "var(--color-surface-elevated)",
+  border: "1px solid var(--color-border)",
+  borderRadius: "8px",
+  fontSize: "12px",
+  color: "var(--color-text-primary)",
+};
+
 export function RequestsChart({ data }: RequestsChartProps) {
   if (!Array.isArray(data) || data.length === 0) {
     return (
-      <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-        <h3 className="mb-4 text-lg font-bold text-[#ededed]">Requests Over Time</h3>
-        <div className="flex h-72 items-center justify-center text-xs text-[#555555]">No data available</div>
+      <div className="rounded-lg border border-border bg-surface p-6">
+        <h3 className="mb-4 text-lg font-bold text-text-primary">Requests Over Time</h3>
+        <div className="flex h-72 items-center justify-center text-xs text-text-muted">No data available</div>
       </div>
     );
   }
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-      <h3 className="mb-4 text-lg font-bold text-[#ededed]">
+    <div className="rounded-lg border border-border bg-surface p-6">
+      <h3 className="mb-4 text-lg font-bold text-text-primary">
         Requests Over Time
       </h3>
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
             <XAxis
               dataKey="timestamp"
               tickFormatter={formatAxisTime}
-              stroke="#555555"
+              stroke="var(--color-text-muted)"
               tick={{ fontSize: 10 }}
               axisLine={false}
               tickLine={false}
@@ -71,27 +79,21 @@ export function RequestsChart({ data }: RequestsChartProps) {
             />
             <YAxis
               tickFormatter={formatNumber}
-              stroke="#555555"
+              stroke="var(--color-text-muted)"
               tick={{ fontSize: 11 }}
               axisLine={false}
               tickLine={false}
               width={52}
             />
             <Tooltip
-              contentStyle={{
-                backgroundColor: "#111111",
-                border: "1px solid #1a1a1a",
-                borderRadius: "8px",
-                fontSize: "12px",
-                color: "#ededed",
-              }}
+              contentStyle={tooltipStyle}
               labelFormatter={(label) => formatTooltipTime(String(label))}
               formatter={(value) => [
                 Number(value).toLocaleString(),
                 "Requests",
               ]}
             />
-            <Legend wrapperStyle={{ fontSize: 12, color: "#888888" }} />
+            <Legend wrapperStyle={{ fontSize: 12, color: "var(--color-text-secondary)" }} />
             <Line
               type="monotone"
               dataKey="requests"

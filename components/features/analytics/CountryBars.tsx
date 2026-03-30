@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { CountryEntry } from "@/lib/types";
 import { formatNumber, formatBytes } from "@/lib/format";
 
@@ -48,47 +49,45 @@ export function CountryBars({ data }: CountryBarsProps) {
   if (!Array.isArray(data)) return null;
   const sorted = [...data].sort((a, b) => b.requests - a.requests).slice(0, 12);
   const maxRequests = sorted[0]?.requests ?? 1;
-  const totalRequests = sorted.reduce((s, e) => s + e.requests, 0);
 
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-      <h3 className="mb-4 text-lg font-bold text-[#ededed]">
+    <div className="rounded-lg border border-border bg-surface p-6">
+      <h3 className="mb-4 text-lg font-bold text-text-primary">
         Requests Volume by Country
       </h3>
       <div className="space-y-2.5">
         {sorted.map((entry) => {
-          const pct = totalRequests > 0 ? (entry.requests / totalRequests) * 100 : 0;
           const code = entry.name?.toUpperCase() ?? "";
           const fullName = getCountryName(code);
           return (
             <div key={entry.name} className="group">
               <div className="mb-1 flex items-center justify-between">
-                <span className="flex items-center gap-2 text-sm text-[#ededed]">
+                <span className="flex items-center gap-2 text-sm text-text-primary">
                   {code && (
-                    <img
+                    <Image
                       src={`${FLAG_BASE}/${code.toLowerCase()}.png`}
                       alt={code}
                       width={16}
                       height={12}
                       className="rounded-[2px]"
-                      loading="lazy"
+                      unoptimized
                       onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
+                        (e.currentTarget as HTMLImageElement).style.display = "none";
                       }}
                     />
                   )}
                   <span className="truncate">{fullName}</span>
                 </span>
                 <div className="ml-2 flex shrink-0 flex-col items-end">
-                  <span className="text-xs tabular-nums text-[#3f83f8]">
+                  <span className="text-xs tabular-nums text-accent">
                     {formatNumber(entry.requests)} requests
                   </span>
-                  <span className="text-[10px] tabular-nums text-[#555555]">
+                  <span className="text-[10px] tabular-nums text-text-muted">
                     {formatBytes(entry.bytes)}
                   </span>
                 </div>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-[#111111]">
+              <div className="h-1.5 overflow-hidden rounded-full bg-surface-elevated">
                 <div
                   className="h-full rounded-full bg-[#3f83f8] transition-all duration-500"
                   style={{
@@ -100,7 +99,7 @@ export function CountryBars({ data }: CountryBarsProps) {
           );
         })}
         {sorted.length === 0 && (
-          <p className="text-xs text-[#555555]">No data available</p>
+          <p className="text-xs text-text-muted">No data available</p>
         )}
       </div>
     </div>

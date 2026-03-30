@@ -12,7 +12,8 @@ export function Card({ children, className, hover, style }: CardProps) {
     <div
       className={cn(
         "rounded-lg border border-border bg-surface p-5",
-        hover && "transition-colors duration-150 hover:border-border-hover hover:bg-surface-elevated",
+        hover &&
+          "transition-[background-color,border-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-border-hover hover:bg-surface-elevated hover:shadow-[0_18px_42px_rgba(0,0,0,0.22)] focus-within:-translate-y-0.5 focus-within:border-border-hover focus-within:bg-surface-elevated focus-within:shadow-[0_18px_42px_rgba(0,0,0,0.22)]",
         className
       )}
       style={style}

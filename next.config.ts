@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "b.v.recipes",
+      },
+      {
+        protocol: "https",
         hostname: "cdn.discordapp.com",
       },
     ],

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Card, CardTitle, CardDescription } from "@/components/ui/Card";
+import Image from "next/image";
+import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { EmojiGrid } from "@/components/features/vmoji/EmojiGrid";
@@ -149,10 +150,13 @@ export default function VmojiPage() {
     <div className="mx-auto max-w-[1200px] px-6 py-20">
       {/* Banner */}
       <div className="relative mb-12 animate-fade-up overflow-hidden rounded-lg">
-        <img
+        <Image
           src="/vmoji-banner.jpg"
           alt="vmoji banner"
-          className="w-full"
+          width={1600}
+          height={480}
+          priority
+          className="h-auto w-full"
         />
         <div className="absolute inset-0 bg-black/40" />
       </div>
@@ -172,6 +176,8 @@ export default function VmojiPage() {
         <div className="mt-8 flex justify-center gap-2">
           <Button
             href="https://discord.com/discovery/applications/1443239934864523356"
+            target="_blank"
+            rel="noopener noreferrer"
             variant="primary"
             className="bg-[#5865F2] hover:bg-[#4752C4] text-white"
           >
@@ -397,6 +403,8 @@ export default function VmojiPage() {
         <div className="mt-6">
           <Button
             href="https://discord.com/discovery/applications/1443239934864523356"
+            target="_blank"
+            rel="noopener noreferrer"
             variant="primary"
             className="bg-[#5865F2] hover:bg-[#4752C4] text-white"
           >

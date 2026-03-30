@@ -3,7 +3,7 @@
 function Pulse({ className }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-lg bg-[#111111] ${className ?? ""}`}
+      className={`animate-pulse rounded-lg bg-surface-elevated ${className ?? ""}`}
     />
   );
 }
@@ -16,7 +16,7 @@ export function AnalyticsSkeleton() {
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5"
+            className="rounded-lg border border-border bg-surface p-5"
           >
             <Pulse className="mb-3 h-3 w-20" />
             <Pulse className="h-7 w-16" />
@@ -29,7 +29,7 @@ export function AnalyticsSkeleton() {
         {Array.from({ length: 2 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6"
+            className="rounded-lg border border-border bg-surface p-6"
           >
             <Pulse className="mb-4 h-4 w-40" />
             <Pulse className="h-64 w-full" />
@@ -42,7 +42,7 @@ export function AnalyticsSkeleton() {
         {Array.from({ length: 2 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6"
+            className="rounded-lg border border-border bg-surface p-6"
           >
             <Pulse className="mb-4 h-4 w-36" />
             <div className="space-y-3">

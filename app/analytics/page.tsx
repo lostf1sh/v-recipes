@@ -31,10 +31,10 @@ export default function AnalyticsPage() {
         style={{ animationDelay: "0ms" }}
       >
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#ededed]">
+          <h1 className="text-2xl font-bold tracking-tight text-text-primary">
             Real-time DNS Analytics
           </h1>
-          <p className="mt-1 text-sm text-[#888888]">
+          <p className="mt-1 text-sm text-text-secondary">
             Monitor your DNS traffic, performance metrics, and usage patterns in real time.
           </p>
         </div>
@@ -62,7 +62,7 @@ export default function AnalyticsPage() {
             cachedPercentage={data.cachedPercentage}
           />
 
-          <EstimatedUsage range={range} />
+          <EstimatedUsage key={range} range={range} />
 
           <div className="grid gap-6 lg:grid-cols-2">
             <RequestsChart data={data.timeSeries} />
@@ -81,7 +81,7 @@ export default function AnalyticsPage() {
       )}
 
       {/* Status bar */}
-      <p className="mt-6 text-center text-xs text-[#555555]">
+      <p className="mt-6 text-center text-xs text-text-muted">
         {showRefreshing ? (
           <>
             <span className="mr-1.5 inline-block h-2 w-2 animate-pulse rounded-full bg-[#3f83f8]" />

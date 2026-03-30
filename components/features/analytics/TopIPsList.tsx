@@ -16,9 +16,9 @@ function IPDetailsPanel({ ip, range }: IPDetailsPanelProps) {
 
   if (loading) {
     return (
-      <div className="mt-3 border-t border-[#1a1a1a] pt-3">
-        <div className="flex items-center gap-2 text-xs text-[#555555]">
-          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-[#555555] border-t-transparent" />
+      <div className="mt-3 border-t border-border pt-3">
+        <div className="flex items-center gap-2 text-xs text-text-muted">
+          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-text-muted border-t-transparent" />
           Loading details...
         </div>
       </div>
@@ -27,8 +27,8 @@ function IPDetailsPanel({ ip, range }: IPDetailsPanelProps) {
 
   if (!details) {
     return (
-      <div className="mt-3 border-t border-[#1a1a1a] pt-3">
-        <p className="text-xs text-[#555555]">Could not load details</p>
+      <div className="mt-3 border-t border-border pt-3">
+        <p className="text-xs text-text-muted">Could not load details</p>
       </div>
     );
   }
@@ -38,44 +38,44 @@ function IPDetailsPanel({ ip, range }: IPDetailsPanelProps) {
   const extraColosCount = colos.length > 8 ? colos.length - 7 : 0;
 
   return (
-    <div className="mt-3 border-t border-[#1a1a1a] pt-3">
+    <div className="mt-3 border-t border-border pt-3">
       <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs sm:grid-cols-4">
         <div>
-          <span className="text-[#555555]">Country</span>
-          <p className="font-medium text-[#ededed]">{details.country || "Unknown"}</p>
+          <span className="text-text-muted">Country</span>
+          <p className="font-medium text-text-primary">{details.country || "Unknown"}</p>
         </div>
         <div>
-          <span className="text-[#555555]">ASN</span>
-          <p className="truncate font-medium text-[#ededed]">
+          <span className="text-text-muted">ASN</span>
+          <p className="truncate font-medium text-text-primary">
             {details.asn ? `AS${details.asn}` : "Unknown"}
             {details.asnDesc ? ` - ${details.asnDesc}` : ""}
           </p>
         </div>
         <div>
-          <span className="text-[#555555]">Sampled</span>
-          <p className="font-medium text-[#ededed]">{formatNumber(details.sampledCount)}</p>
+          <span className="text-text-muted">Sampled</span>
+          <p className="font-medium text-text-primary">{formatNumber(details.sampledCount)}</p>
         </div>
         <div>
-          <span className="text-[#555555]">IP</span>
-          <p className="truncate font-mono font-medium text-[#ededed]">{details.ip || ip}</p>
+          <span className="text-text-muted">IP</span>
+          <p className="truncate font-mono font-medium text-text-primary">{details.ip || ip}</p>
         </div>
       </div>
 
       {/* Datacenter locations */}
       {colos.length > 0 && (
         <div className="mt-3">
-          <p className="mb-1.5 text-xs font-medium text-[#555555]">Datacenter Locations</p>
+          <p className="mb-1.5 text-xs font-medium text-text-muted">Datacenter Locations</p>
           <div className="flex flex-wrap gap-1.5">
             {showColos.map((colo) => (
               <span
                 key={colo}
-                className="rounded-full bg-[#1a1a1a] px-2 py-0.5 text-[10px] font-medium tabular-nums text-[#888888]"
+                className="rounded-full bg-surface-elevated px-2 py-0.5 text-[10px] font-medium tabular-nums text-text-secondary"
               >
                 {colo}
               </span>
             ))}
             {extraColosCount > 0 && (
-              <span className="rounded-full bg-[#1a1a1a] px-2 py-0.5 text-[10px] font-medium text-[#555555]">
+              <span className="rounded-full bg-surface-elevated px-2 py-0.5 text-[10px] font-medium text-text-muted">
                 +{extraColosCount}
               </span>
             )}
@@ -85,12 +85,12 @@ function IPDetailsPanel({ ip, range }: IPDetailsPanelProps) {
 
       {details.paths && details.paths.length > 0 && (
         <div className="mt-3">
-          <p className="mb-1.5 text-xs font-medium text-[#555555]">Top Paths</p>
+          <p className="mb-1.5 text-xs font-medium text-text-muted">Top Paths</p>
           <div className="space-y-1">
             {details.paths.slice(0, 8).map((p) => (
               <div key={p.path} className="flex items-center justify-between text-xs">
-                <span className="min-w-0 truncate font-mono text-[#888888]">{p.path}</span>
-                <span className="ml-2 shrink-0 tabular-nums text-[#555555]">
+                <span className="min-w-0 truncate font-mono text-text-secondary">{p.path}</span>
+                <span className="ml-2 shrink-0 tabular-nums text-text-muted">
                   {formatNumber(p.count)}
                 </span>
               </div>
@@ -114,8 +114,8 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
   const totalCount = sorted.reduce((s, e) => s + e.count, 0);
 
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-      <h3 className="mb-4 text-lg font-bold text-[#ededed]">
+    <div className="rounded-lg border border-border bg-surface p-6">
+      <h3 className="mb-4 text-lg font-bold text-text-primary">
         Top Users
       </h3>
       <div className="space-y-2">
@@ -128,8 +128,8 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
               className={cn(
                 "rounded-lg border border-transparent px-3 py-2.5 transition-colors",
                 isExpanded
-                  ? "border-[#1a1a1a] bg-[#111111]"
-                  : "hover:bg-[#111111]/50"
+                  ? "border-border bg-surface-elevated"
+                  : "hover:bg-surface-elevated/70"
               )}
             >
               <button
@@ -137,7 +137,7 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
                 onClick={() =>
                   setExpandedIP(isExpanded ? null : entry.originalIP)
                 }
-                className="flex w-full cursor-pointer items-center justify-between gap-3"
+                className="flex w-full cursor-pointer items-center justify-between gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
               >
                 <div className="flex min-w-0 items-center gap-2.5">
                   <svg
@@ -146,7 +146,7 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
                     viewBox="0 0 12 12"
                     fill="none"
                     className={cn(
-                      "shrink-0 text-[#555555] transition-transform duration-200",
+                      "shrink-0 text-text-muted transition-transform duration-200",
                       isExpanded && "rotate-90"
                     )}
                   >
@@ -158,13 +158,13 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <span className="truncate font-mono text-sm text-[#ededed]">
+                  <span className="truncate font-mono text-sm text-text-primary">
                     {entry.ip}
                   </span>
                 </div>
-                <div className="flex shrink-0 items-center gap-3 text-xs tabular-nums text-[#555555]">
+                <div className="flex shrink-0 items-center gap-3 text-xs tabular-nums text-text-muted">
                   <span>{formatNumber(entry.count)} req</span>
-                  <span className="text-[#3f83f8]">{pct.toFixed(1)}%</span>
+                  <span className="text-accent">{pct.toFixed(1)}%</span>
                 </div>
               </button>
 
@@ -175,7 +175,7 @@ export function TopIPsList({ data, range }: TopIPsListProps) {
           );
         })}
         {sorted.length === 0 && (
-          <p className="text-xs text-[#555555]">No data available</p>
+          <p className="text-xs text-text-muted">No data available</p>
         )}
       </div>
     </div>

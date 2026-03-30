@@ -12,20 +12,20 @@ interface MetricCardProps {
 
 function MetricCard({ label, value, subtitle, accent }: MetricCardProps) {
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5">
-      <p className="text-xs font-medium uppercase tracking-wider text-[#555555]">
+    <div className="rounded-lg border border-border bg-surface p-5">
+      <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
         {label}
       </p>
       <p
         className={cn(
           "mt-2 text-2xl font-bold tabular-nums tracking-tight",
-          accent ? "text-[#3f83f8]" : "text-[#ededed]"
+          accent ? "text-accent" : "text-text-primary"
         )}
       >
         {value}
       </p>
       {subtitle && (
-        <p className="mt-1 text-xs text-[#555555]">{subtitle}</p>
+        <p className="mt-1 text-xs text-text-muted">{subtitle}</p>
       )}
     </div>
   );
