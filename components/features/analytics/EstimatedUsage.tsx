@@ -21,9 +21,6 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
     const controller = new AbortController();
     abortRef.current = controller;
 
-    setLoading(true);
-    setError(false);
-
     fetch(`${API_BASE}/dataperip?range=${range}`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error(`${res.status}`);
@@ -48,9 +45,9 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
 
   if (loading) {
     return (
-      <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-        <div className="flex items-center gap-2 text-sm text-[#555555]">
-          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-[#555555] border-t-transparent" />
+      <div className="rounded-lg border border-border bg-surface p-6">
+        <div className="flex items-center gap-2 text-sm text-text-muted">
+          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-text-muted border-t-transparent" />
           Loading your usage data...
         </div>
       </div>
@@ -59,8 +56,8 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
 
   if (error || !data) {
     return (
-      <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-        <p className="text-sm text-[#555555]">
+      <div className="rounded-lg border border-border bg-surface p-6">
+        <p className="text-sm text-text-muted">
           Could not load your estimated usage data.
         </p>
       </div>
@@ -80,8 +77,8 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
   }
 
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
-      <h3 className="mb-4 text-lg font-bold text-[#ededed]">
+    <div className="rounded-lg border border-border bg-surface p-6">
+      <h3 className="mb-4 text-lg font-bold text-text-primary">
         Your Estimated Usage
       </h3>
 
@@ -113,13 +110,13 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
       {/* Path breakdown */}
       {pathEntries.length > 0 && (
         <div>
-          <p className="mb-2 text-xs font-medium text-[#555555]">
+          <p className="mb-2 text-xs font-medium text-text-muted">
             Your Last Usage
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#1a1a1a] text-[#555555]">
+                <tr className="border-b border-border text-text-muted">
                   <th className="pb-2 pr-4 font-medium">Path</th>
                   <th className="pb-2 pr-4 text-right font-medium">Requests</th>
                   <th className="pb-2 pr-4 text-right font-medium">Cache Hit</th>
@@ -127,7 +124,7 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
                   <th className="pb-2 font-medium">Protocols</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1a1a1a]/50">
+              <tbody className="divide-y divide-border/50">
                 {pathEntries.slice(0, 10).map(([path, stat]) => (
                   <PathRow key={path} path={path} stat={stat} />
                 ))}
@@ -138,7 +135,7 @@ export function EstimatedUsage({ range }: EstimatedUsageProps) {
       )}
 
       {/* Privacy notice */}
-      <p className="mt-4 text-[10px] leading-relaxed text-[#555555]">
+      <p className="mt-4 text-[10px] leading-relaxed text-text-muted">
         This data is based on your last 1,000 DNS requests and is an estimate of
         your usage. Your IP address is used to identify your requests and is not
         stored beyond the analytics window.
@@ -158,9 +155,9 @@ function SummaryItem({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-[10px] text-[#555555]">{label}</p>
+      <p className="text-[10px] text-text-muted">{label}</p>
       <p
-        className={`mt-0.5 truncate text-sm font-medium text-[#ededed] ${mono ? "font-mono" : ""}`}
+        className={`mt-0.5 truncate text-sm font-medium text-text-primary ${mono ? "font-mono" : ""}`}
         title={value}
       >
         {value}
@@ -177,11 +174,11 @@ function PathRow({
   stat: DataPerIPPathStat;
 }) {
   return (
-    <tr className="text-[#888888]">
-      <td className="truncate py-1.5 pr-4 font-mono text-[#ededed]" style={{ maxWidth: "280px" }}>
+    <tr className="text-text-secondary">
+      <td className="truncate py-1.5 pr-4 font-mono text-text-primary" style={{ maxWidth: "280px" }}>
         {path}
       </td>
-      <td className="py-1.5 pr-4 text-right tabular-nums text-[#3f83f8]">
+      <td className="py-1.5 pr-4 text-right tabular-nums text-accent">
         {formatNumber(stat.count)}
       </td>
       <td className="py-1.5 pr-4 text-right tabular-nums">

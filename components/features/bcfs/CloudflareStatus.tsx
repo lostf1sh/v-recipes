@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
 /* ------------------------------------------------------------------ */
@@ -21,6 +21,7 @@ interface CompGroup { group: { name: string }; components: CfComponent[] }
 /* ------------------------------------------------------------------ */
 
 const API = "/api/cfstatus";
+const CARD_CLASS = "flex h-full min-h-[18rem] flex-col rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5 md:min-h-[22rem]";
 
 async function api<T>(path: string): Promise<T | null> {
   try {
@@ -95,6 +96,14 @@ function getImpactStyle(impact: string | undefined) {
   return IMPACT_STYLES[impact] ?? IMPACT_STYLES.none;
 }
 
+function EmptyState({ text }: { text: string }) {
+  return (
+    <div className="flex flex-1 items-center justify-center rounded-md border border-dashed border-[#1a1a1a] bg-[#080808] px-4 text-center text-[12px] text-[#555]">
+      {text}
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Sub-components                                                      */
 /* ------------------------------------------------------------------ */
@@ -115,7 +124,7 @@ function CompGroupCard({ g }: { g: CompGroup }) {
   const hiddenCount = sorted.length - visible.length;
 
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5">
+    <div className={CARD_CLASS}>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-[#ededed]">{g.group.name}</h3>
         <div className="flex items-center gap-2">
@@ -127,7 +136,7 @@ function CompGroupCard({ g }: { g: CompGroup }) {
           <span className="text-[11px] text-[#555]">{g.components.length} {label}{g.components.length !== 1 ? "s" : ""}</span>
         </div>
       </div>
-      <div>
+      <div className="flex-1">
         {visible.map(c => (
           <div key={c.id} className="flex items-center justify-between border-t border-[#1a1a1a] py-2.5 first:border-0 first:pt-0">
             <span className="truncate text-[13px] text-[#888]">{c.name}</span>
@@ -231,25 +240,40 @@ function MaintCard({ m }: { m: CfMaintenance }) {
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5">
+    <div className={CARD_CLASS}>
       <h3 className="mb-3 text-sm font-semibold text-[#ededed]">{title}</h3>
-      {children}
+      <div className="flex flex-1 flex-col">{children}</div>
     </div>
   );
 }
 
-function TruncatedSection({ title, initialShow, children }: { title: string; initialShow: number; children: React.ReactNode[] }) {
-  const [showAll, setShowAll] = useState(children.length <= initialShow);
-  const visible = showAll ? children : children.slice(0, initialShow);
-  const hiddenCount = children.length - visible.length;
+function TruncatedSection({
+  title,
+  initialShow,
+  emptyMessage,
+  children,
+}: {
+  title: string;
+  initialShow: number;
+  emptyMessage: string;
+  children: React.ReactNode[];
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const canTruncate = children.length > initialShow;
+  const visible = !canTruncate || showAll ? children : children.slice(0, initialShow);
+  const hiddenCount = canTruncate && !showAll ? children.length - initialShow : 0;
 
   return (
-    <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-5">
+    <div className={CARD_CLASS}>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-[#ededed]">{title}</h3>
         <span className="text-[11px] text-[#555]">{children.length} item{children.length !== 1 ? "s" : ""}</span>
       </div>
-      <div className="space-y-1">{visible}</div>
+      {children.length > 0 ? (
+        <div className="flex-1 space-y-1">{visible}</div>
+      ) : (
+        <EmptyState text={emptyMessage} />
+      )}
       {hiddenCount > 0 && (
         <button
           onClick={() => setShowAll(true)}
@@ -272,7 +296,6 @@ export function CloudflareStatus() {
   const [upMaint, setUpMaint] = useState<CfMaintenance[]>([]);
   const [actMaint, setActMaint] = useState<CfMaintenance[]>([]);
   const [loading, setLoading] = useState(false);
-  const [initialized, setInitialized] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -290,12 +313,11 @@ export function CloudflareStatus() {
   }, []);
 
   useEffect(() => {
-    if (!initialized) {
-      setInitialized(true);
-      setLoading(true);
-      load();
-    }
-  }, [initialized, load]);
+    const timeout = window.setTimeout(() => {
+      void load();
+    }, 0);
+    return () => window.clearTimeout(timeout);
+  }, [load]);
 
   const groups = summary ? groupComps(summary) : [];
   const activeInc = summary?.incidents ?? [];
@@ -335,38 +357,39 @@ export function CloudflareStatus() {
         </div>
       )}
 
-      {/* Active issues - full width */}
-      {activeInc.length > 0 && (
-        <div className="animate-fade-up" style={{ animationDelay: "200ms" }}>
-          <SectionCard title="Active Incidents">
-            <div className="space-y-1">{activeInc.slice(0, 10).map(i => <IncidentCard key={i.id} item={i} timePrefix="Updated" />)}</div>
-          </SectionCard>
-        </div>
-      )}
-
-      {actMaint.length > 0 && (
-        <div className="animate-fade-up" style={{ animationDelay: "250ms" }}>
+      <div className="grid gap-4 md:grid-cols-2 animate-fade-up" style={{ animationDelay: "200ms" }}>
+        <div className="h-full">
           <SectionCard title="Active Maintenance">
-            <div className="space-y-1">{actMaint.slice(0, 10).map(m => <MaintCard key={m.id} m={m} />)}</div>
+            {actMaint.length > 0 ? (
+              <div className="space-y-1">{actMaint.slice(0, 10).map(m => <MaintCard key={m.id} m={m} />)}</div>
+            ) : (
+              <EmptyState text="No active maintenance" />
+            )}
           </SectionCard>
         </div>
-      )}
-
-      {/* Upcoming maintenance + past incidents side by side with show more */}
-      {(upMaint.length > 0 || pastInc.length > 0) && (
-        <div className="grid gap-4 md:grid-cols-2 animate-fade-up" style={{ animationDelay: "300ms" }}>
-          {upMaint.length > 0 && (
-            <TruncatedSection title="Upcoming Maintenance" initialShow={5}>
-              {upMaint.map(m => <MaintCard key={m.id} m={m} />)}
-            </TruncatedSection>
-          )}
-          {pastInc.length > 0 && (
-            <TruncatedSection title="Past Incidents" initialShow={5}>
-              {pastInc.map(i => <IncidentCard key={i.id} item={i} timePrefix="Resolved" />)}
-            </TruncatedSection>
-          )}
+        <div className="h-full">
+          <TruncatedSection title="Upcoming Maintenance" initialShow={5} emptyMessage="No upcoming maintenance">
+            {upMaint.map(m => <MaintCard key={m.id} m={m} />)}
+          </TruncatedSection>
         </div>
-      )}
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2 animate-fade-up" style={{ animationDelay: "300ms" }}>
+        <div className="h-full">
+          <SectionCard title="Active Incidents">
+            {activeInc.length > 0 ? (
+              <div className="space-y-1">{activeInc.slice(0, 10).map(i => <IncidentCard key={i.id} item={i} timePrefix="Updated" />)}</div>
+            ) : (
+              <EmptyState text="No active incidents" />
+            )}
+          </SectionCard>
+        </div>
+        <div className="h-full">
+          <TruncatedSection title="Past Incidents" initialShow={5} emptyMessage="No past incidents">
+            {pastInc.map(i => <IncidentCard key={i.id} item={i} timePrefix="Resolved" />)}
+          </TruncatedSection>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 
 interface Emoji {
@@ -27,6 +28,23 @@ export function EmojiGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
+
+  function loadFallback() {
+    fetch("/vmoji-data.json")
+      .then((r) => r.json())
+      .then((fallback) => {
+        const mapped: EmojiCategory[] = fallback.map(
+          (c: { category: string; emojis: { name: string; url: string }[] }) => ({
+            name: c.category,
+            emojis: c.emojis.map((e) => ({ shortName: e.name, imageUrl: e.url })),
+          })
+        );
+        setCategories(mapped);
+        setTotal(mapped.reduce((s, c) => s + c.emojis.length, 0));
+        if (mapped.length > 0) setActiveCategory(mapped[0].name);
+      })
+      .catch(() => {});
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -74,23 +92,6 @@ export function EmojiGrid() {
     return () => controller.abort();
   }, []);
 
-  function loadFallback() {
-    fetch("/vmoji-data.json")
-      .then((r) => r.json())
-      .then((fallback) => {
-        const mapped: EmojiCategory[] = fallback.map(
-          (c: { category: string; emojis: { name: string; url: string }[] }) => ({
-            name: c.category,
-            emojis: c.emojis.map((e) => ({ shortName: e.name, imageUrl: e.url })),
-          })
-        );
-        setCategories(mapped);
-        setTotal(mapped.reduce((s, c) => s + c.emojis.length, 0));
-        if (mapped.length > 0) setActiveCategory(mapped[0].name);
-      })
-      .catch(() => {});
-  }
-
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -101,9 +102,9 @@ export function EmojiGrid() {
 
   if (categories.length === 0 && !error) {
     return (
-      <div className="rounded-lg border border-[#1a1a1a] bg-[#111] px-4 py-3 text-[13px] text-[#888]">
-        No emojis currently available. Use <code className="text-[#3f83f8]">/emoji browse:true</code> or{" "}
-        <code className="text-[#3f83f8]">/browse</code> in Discord to browse directly.
+      <div className="rounded-lg border border-border bg-surface-elevated px-4 py-3 text-[13px] text-text-secondary">
+        No emojis currently available. Use <code className="text-accent">/emoji browse:true</code> or{" "}
+        <code className="text-accent">/browse</code> in Discord to browse directly.
       </div>
     );
   }
@@ -127,10 +128,10 @@ export function EmojiGrid() {
                 type="button"
                 onClick={() => setActiveCategory(cat.name)}
                 className={cn(
-                  "cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors",
+                  "cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                   activeCategory === cat.name
                     ? "bg-[#5865F2] text-white"
-                    : "bg-[#111] text-[#888] hover:text-[#ededed]"
+                    : "bg-surface-elevated text-text-secondary hover:text-text-primary"
                 )}
               >
                 {cat.name}
@@ -144,20 +145,20 @@ export function EmojiGrid() {
               {active.emojis.map((emoji) => (
                 <div
                   key={emoji.shortName}
-                  className="group flex flex-col items-center gap-2 rounded-lg border border-transparent p-3 transition-all hover:border-[#1a1a1a] hover:bg-[#111]"
+                  className="group flex flex-col items-center gap-2 rounded-lg border border-transparent p-3 transition-all hover:border-border hover:bg-surface-elevated"
                 >
-                  <img
+                  <Image
                     src={emoji.imageUrl}
                     alt={emoji.shortName}
                     width={56}
                     height={56}
-                    loading="lazy"
                     className="h-14 w-14 object-contain"
+                    unoptimized
                     onError={(e) => {
-                      (e.target as HTMLImageElement).style.opacity = "0.3";
+                      (e.currentTarget as HTMLImageElement).style.opacity = "0.3";
                     }}
                   />
-                  <span className="max-w-full truncate text-[11px] text-[#555] group-hover:text-[#888]">
+                  <span className="max-w-full truncate text-[11px] text-text-muted group-hover:text-text-secondary">
                     {emoji.shortName}
                   </span>
                 </div>
@@ -165,10 +166,10 @@ export function EmojiGrid() {
             </div>
           )}
 
-          <p className="mt-4 text-center text-xs text-[#555]">
+          <p className="mt-4 text-center text-xs text-text-muted">
             {total} emojis across {categories.length} categories. Use{" "}
-            <code className="text-[#3f83f8]">/emoji</code> or{" "}
-            <code className="text-[#3f83f8]">/browse</code> in Discord to browse the full catalog.
+            <code className="text-accent">/emoji</code> or{" "}
+            <code className="text-accent">/browse</code> in Discord to browse the full catalog.
           </p>
         </>
       )}

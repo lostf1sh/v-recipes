@@ -61,6 +61,17 @@ async function fetchTraceFallback(): Promise<Record<string, string>> {
   return {};
 }
 
+function parseCoordinates(loc?: string): [number | null, number | null] {
+  if (!loc) return [null, null];
+
+  const [lat, lon] = loc.split(",").map((value) => Number(value.trim()));
+  if (Number.isNaN(lat) || Number.isNaN(lon)) {
+    return [null, null];
+  }
+
+  return [lat, lon];
+}
+
 export async function GET(request: NextRequest) {
   const rawIp = getClientIp(request);
   const clientIp = rawIp && !isNonPublicIp(rawIp) ? rawIp : "";
@@ -87,6 +98,8 @@ export async function GET(request: NextRequest) {
 
   const coloFromIncomingRay = parseColoFromCfRayHeader(request.headers.get("cf-ray"));
 
+  const [latitude, longitude] = parseCoordinates(ipinfo.loc);
+
   const merged = {
     ip,
     colo: coloFromIncomingRay ?? "Unknown",
@@ -97,6 +110,8 @@ export async function GET(request: NextRequest) {
     country: ipinfo.country ?? traceFallback.loc ?? "",
     warp: traceFallback.warp ?? "off",
     http: traceFallback.http ?? "",
+    latitude,
+    longitude,
   };
 
   return Response.json(merged);

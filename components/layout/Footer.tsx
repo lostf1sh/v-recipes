@@ -10,24 +10,24 @@ const footerLinks = [
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-border">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4">
-        <p className="text-[11px] text-text-muted">
-          &copy; {new Date().getFullYear()} v.recipes &middot; design by{" "}
+      <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[11px] leading-relaxed text-text-muted">
+          &copy; {new Date().getFullYear()} v.recipes &middot; Designed by{" "}
           <a
             href="https://github.com/lostf1sh"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-accent transition-colors hover:text-accent-hover"
+            className="rounded-sm text-accent transition-colors hover:text-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             lostf1sh
           </a>
         </p>
-        <div className="flex gap-5">
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
           {footerLinks.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              className="text-[11px] text-text-muted transition-colors hover:text-text-secondary"
+              className="rounded-sm text-[11px] text-text-muted transition-colors hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {label}
             </Link>

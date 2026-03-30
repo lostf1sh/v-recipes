@@ -16,11 +16,8 @@ import { cn } from "@/lib/cn";
 import { fetchEdgeLocationLabel } from "@/lib/cfColo";
 import { fetchIpinfoFromBrowser, isNonPublicIp } from "@/lib/geo";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function loadSpeedTestLib(): Promise<any> {
-  const mod = await (Function(
-    'return import("https://cdn.skypack.dev/@cloudflare/speedtest")'
-  )());
+async function loadSpeedTestLib() {
+  const mod = await import("@cloudflare/speedtest");
   return mod.default;
 }
 
