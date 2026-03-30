@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CloudflareStatus } from "@/components/features/bcfs/CloudflareStatus";
+import { BCFSClient } from "./BCFSClient";
 
 export const metadata: Metadata = {
   title: "Better Cloudflare Status",
@@ -17,7 +17,7 @@ export default function BCFSPage() {
           Cloudflare Status, Simplified
         </p>
       </header>
-      <CloudflareStatus />
+      <BCFSClient />
     </div>
   );
 }
