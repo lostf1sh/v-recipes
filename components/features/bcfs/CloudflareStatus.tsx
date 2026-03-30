@@ -286,7 +286,7 @@ export function CloudflareStatus() {
   }, [initialized, load]);
 
   const groups = summary ? groupComps(summary) : [];
-  const activeInc = summary?.incidents ?? [];
+  const activeInc = incidents.filter(i => i.status !== "resolved" && i.status !== "postmortem");
   const pastInc = incidents.filter(i => i.status === "resolved" || i.status === "postmortem").slice(0, 20);
 
   return (
