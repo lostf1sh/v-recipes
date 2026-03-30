@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
   description:
     "Small team, big curiosity. Privacy-focused DNS, network tools, and developer experiments.",
+  icons: {
+    icon: "https://v.recipes/assets/internal/vrecipeslogo1.png",
+  },
 };
 
 export default function RootLayout({

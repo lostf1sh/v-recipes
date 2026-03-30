@@ -11,9 +11,12 @@ const versionConfig: Record<string, { color: string }> = {
 };
 
 function formatPct(pct: number): string {
-  if (pct >= 1) return `${pct.toFixed(1)}%`;
-  if (pct >= 0.01) return `${pct.toFixed(2)}%`;
-  return `${pct}%`;
+  if (pct >= 10) return `${pct.toFixed(1)}%`;
+  if (pct >= 1) return `${pct.toFixed(2)}%`;
+  if (pct >= 0.1) return `${pct.toFixed(3)}%`;
+  if (pct >= 0.01) return `${pct.toFixed(4)}%`;
+  if (pct >= 0.001) return `${pct.toFixed(5)}%`;
+  return `${pct.toFixed(6)}%`;
 }
 
 interface HTTPVersionBarsProps {
