@@ -44,6 +44,8 @@ interface ConnectionInfo {
   isp: string;
   location: string;
   connectionType: string;
+  colo: string | null;
+  serverCoords: [number, number] | null;
 }
 
 interface TestResults {
@@ -62,6 +64,49 @@ const phaseSteps: { key: Phase; label: string }[] = [
   { key: "upload", label: "Upload" },
   { key: "complete", label: "Complete" },
 ];
+
+// Cloudflare datacenter coordinates mapping
+const COLO_COORDINATES: Record<string, { lat: number; lon: number; city: string }> = {
+  'SJC': { lat: 37.3688, lon: -121.9143, city: 'San Jose, USA' },
+  'LAX': { lat: 33.9416, lon: -118.4085, city: 'Los Angeles, USA' },
+  'DFW': { lat: 32.8998, lon: -97.0403, city: 'Dallas, USA' },
+  'ORD': { lat: 41.9742, lon: -87.9073, city: 'Chicago, USA' },
+  'ATL': { lat: 33.6407, lon: -84.4277, city: 'Atlanta, USA' },
+  'MIA': { lat: 25.7959, lon: -80.2870, city: 'Miami, USA' },
+  'IAD': { lat: 38.9531, lon: -77.4565, city: 'Ashburn, USA' },
+  'EWR': { lat: 40.6895, lon: -74.1745, city: 'Newark, USA' },
+  'SEA': { lat: 47.4502, lon: -122.3088, city: 'Seattle, USA' },
+  'DEN': { lat: 39.8561, lon: -104.6737, city: 'Denver, USA' },
+  'PHX': { lat: 33.4352, lon: -112.0101, city: 'Phoenix, USA' },
+  'IAH': { lat: 29.9902, lon: -95.3368, city: 'Houston, USA' },
+  'LHR': { lat: 51.4700, lon: -0.4543, city: 'London, UK' },
+  'AMS': { lat: 52.3105, lon: 4.7683, city: 'Amsterdam, Netherlands' },
+  'FRA': { lat: 50.0379, lon: 8.5622, city: 'Frankfurt, Germany' },
+  'CDG': { lat: 49.0097, lon: 2.5479, city: 'Paris, France' },
+  'SIN': { lat: 1.3644, lon: 103.9915, city: 'Singapore' },
+  'HKG': { lat: 22.3080, lon: 113.9185, city: 'Hong Kong' },
+  'NRT': { lat: 35.7720, lon: 140.3929, city: 'Tokyo, Japan' },
+  'SYD': { lat: -33.9399, lon: 151.1753, city: 'Sydney, Australia' },
+  'MEL': { lat: -37.6690, lon: 144.8410, city: 'Melbourne, Australia' },
+  'GRU': { lat: -23.4356, lon: -46.4731, city: 'São Paulo, Brazil' },
+  'GIG': { lat: -22.8099, lon: -43.2436, city: 'Rio de Janeiro, Brazil' },
+  'JNB': { lat: -26.1392, lon: 28.2460, city: 'Johannesburg, South Africa' },
+  'BOM': { lat: 19.0896, lon: 72.8656, city: 'Mumbai, India' },
+  'DEL': { lat: 28.5562, lon: 77.1000, city: 'New Delhi, India' },
+  'ICN': { lat: 37.4602, lon: 126.4407, city: 'Seoul, South Korea' },
+};
+
+function getColoCoordinates(colo: string | null | undefined): [number, number] | null {
+  if (!colo) return null;
+  const coords = COLO_COORDINATES[colo.toUpperCase()];
+  return coords ? [coords.lat, coords.lon] : null;
+}
+
+function getColoCity(colo: string | null | undefined): string {
+  if (!colo) return 'Unknown';
+  const info = COLO_COORDINATES[colo.toUpperCase()];
+  return info ? info.city : colo;
+}
 
 function getGrade(loaded: number): { grade: string; message: string } {
   if (loaded < 15) return { grade: "A+", message: "Excellent! Minimal bufferbloat." };
@@ -87,6 +132,8 @@ async function fetchConnectionInfo(): Promise<ConnectionInfo> {
     const location = [data.city, data.colo ? `(${data.colo})` : ""]
       .filter(Boolean)
       .join(" ") || "Unknown";
+    const colo = data.colo ?? null;
+    const serverCoords = getColoCoordinates(colo);
     return {
       ip: data.ip ?? "Unknown",
       isp: data.isp ?? "Unknown",
@@ -94,9 +141,11 @@ async function fetchConnectionInfo(): Promise<ConnectionInfo> {
       connectionType: data.warp === "on"
         ? "WARP"
         : `Connected via IPv${data.ip?.includes(":") ? "6" : "4"}`,
+      colo,
+      serverCoords,
     };
   } catch {
-    return { ip: "Unknown", isp: "Unknown", location: "Unknown", connectionType: "Unknown" };
+    return { ip: "Unknown", isp: "Unknown", location: "Unknown", connectionType: "Unknown", colo: null, serverCoords: null };
   }
 }
 
@@ -367,6 +416,7 @@ export function BufferbloatTest() {
       {(isRunning || phase === "complete") && connInfo && (
         <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
           <h2 className="mb-4 text-lg font-semibold text-[#ededed]">Server Location</h2>
+          <ServerMap serverCoords={connInfo.serverCoords} colo={connInfo.colo} />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <InfoCard label="Your IP" value={connInfo.ip} />
             <InfoCard label="ISP" value={connInfo.isp} />
@@ -472,6 +522,50 @@ export function BufferbloatTest() {
           </div>
         </div>
       )}
+
+      {/* Understanding Your Results */}
+      {phase === "complete" && (
+        <div className="rounded-lg border border-[#1a1a1a] bg-[#0a0a0a] p-6">
+          <h2 className="mb-4 text-lg font-semibold text-[#ededed]">Understanding Your Results</h2>
+          <div className="text-gray-300 space-y-4">
+            <p>
+              <strong>Bufferbloat</strong> occurs when network equipment buffers too much
+              data, causing high latency during periods of high throughput. This creates lag in real-time
+              applications like video calls and gaming.
+            </p>
+
+            <h3 className="text-base font-semibold text-[#ededed] mt-6">Test Phases</h3>
+            <ul className="list-disc pl-6 space-y-1 text-sm">
+              <li><strong>Baseline:</strong> Measures your connection&apos;s idle latency (the best-case scenario)</li>
+              <li><strong>Download:</strong> Measures latency while downloading at maximum speed</li>
+              <li><strong>Upload:</strong> Measures latency while uploading at maximum speed</li>
+            </ul>
+
+            <h3 className="text-base font-semibold text-[#ededed] mt-6">Grading Scale</h3>
+            <ul className="list-disc pl-6 space-y-1 text-sm">
+              <li><strong>A+:</strong> &lt;15ms increase — Excellent</li>
+              <li><strong>A:</strong> 15-50ms increase — Very Good</li>
+              <li><strong>B:</strong> 50-100ms increase — Good</li>
+              <li><strong>C:</strong> 100-300ms increase — Acceptable</li>
+              <li><strong>D:</strong> 300-500ms increase — Poor</li>
+              <li><strong>F:</strong> &gt;500ms increase — Very Poor</li>
+            </ul>
+
+            <p className="text-xs text-gray-400 mt-4">
+              <strong>Note:</strong> This test uses Cloudflare&apos;s{" "}
+              <a
+                href="https://github.com/cloudflare/speedtest"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#3f83f8] hover:text-[#5a9aff] underline"
+              >
+                speedtest library
+              </a>
+              . All testing is done through Cloudflare&apos;s global edge network.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -493,6 +587,104 @@ function InfoCard({ label, value }: { label: string; value: string }) {
     <div className="rounded-lg bg-[#111111] p-3">
       <div className="text-[10px] uppercase tracking-wider text-[#555555]">{label}</div>
       <div className="mt-1 text-sm font-semibold text-[#ededed]">{value}</div>
+    </div>
+  );
+}
+
+// Server map component using Leaflet
+function ServerMap({ serverCoords, colo }: { serverCoords: [number, number] | null; colo: string | null }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<unknown>(null);
+
+  useEffect(() => {
+    if (!serverCoords || !mapRef.current) return;
+
+    // Check if map already initialized
+    if (mapInstanceRef.current) {
+      return;
+    }
+
+    let mounted = true;
+
+    const initMap = async () => {
+      try {
+        // Load Leaflet CSS
+        if (!document.getElementById('leaflet-css')) {
+          const link = document.createElement('link');
+          link.id = 'leaflet-css';
+          link.rel = 'stylesheet';
+          link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+          link.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+          link.crossOrigin = '';
+          document.head.appendChild(link);
+        }
+
+        // Load Leaflet JS
+        if (!(window as unknown as { L: unknown }).L) {
+          await new Promise<void>((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+            script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+            script.crossOrigin = '';
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error('Failed to load Leaflet'));
+            document.head.appendChild(script);
+          });
+        }
+
+        if (!mounted) return;
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const L = (window as any).L;
+        if (!L || !mapRef.current) return;
+
+        // Initialize map
+        const map = L.map(mapRef.current).setView(serverCoords, 4);
+
+        // Use CartoDB dark tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors • CartoDB',
+          maxZoom: 19,
+        }).addTo(map);
+
+        // Create server SVG marker
+        const serverSvg = `<svg role="img" viewBox="0 0 460 271.2" width="40" height="24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path fill="#FBAD41" d="M328.6,125.6c-0.8,0-1.5,0.6-1.8,1.4l-4.8,16.7c-2.1,7.2-1.3,13.8,2.2,18.7c3.2,4.5,8.6,7.1,15.1,7.4l26.2,1.6c0.8,0,1.5,0.4,1.9,1c0.4,0.6,0.5,1.5,0.3,2.2c-0.4,1.2-1.6,2.1-2.9,2.2l-27.3,1.6c-14.8,0.7-30.7,12.6-36.3,27.2l-2,5.1c-0.4,1,0.3,2,1.4,2h93.8c1.1,0,2.1-0.7,2.4-1.8c1.6-5.8,2.5-11.9,2.5-18.2c0-37-30.2-67.2-67.3-67.2C330.9,125.5,329.7,125.5,328.6,125.6z"></path>
+          <path fill="#F6821F" d="M292.8,204.4c2.1-7.2,1.3-13.8-2.2-18.7c-3.2-4.5-8.6-7.1-15.1-7.4l-123.1-1.6c-0.8,0-1.5-0.4-1.9-1s-0.5-1.4-0.3-2.2c0.4-1.2,1.6-2.1,2.9-2.2l124.2-1.6c14.7-0.7,30.7-12.6,36.3-27.2l7.1-18.5c0.3-0.8,0.4-1.6,0.2-2.4c-8-36.2-40.3-63.2-78.9-63.2c-35.6,0-65.8,23-76.6,54.9c-7-5.2-15.9-8-25.5-7.1c-17.1,1.7-30.8,15.4-32.5,32.5c-0.4,4.4-0.1,8.7,0.9,12.7c-27.9,0.8-50.2,23.6-50.2,51.7c0,2.5,0.2,5,0.5,7.5c0.2,1.2,1.2,2.1,2.4,2.1h227.2c1.3,0,2.5-0.9,2.9-2.2L292.8,204.4z"></path>
+        </svg>`;
+
+        const serverIcon = L.divIcon({
+          className: 'cf-server-marker',
+          html: serverSvg,
+          iconSize: [40, 24],
+          iconAnchor: [20, 24],
+        });
+
+        L.marker(serverCoords, { icon: serverIcon })
+          .addTo(map)
+          .bindPopup(`<b>Cloudflare ${colo || 'Server'}</b><br>${getColoCity(colo)}`)
+          .openPopup();
+
+        mapInstanceRef.current = map;
+      } catch (err) {
+        console.error('Failed to initialize map:', err);
+      }
+    };
+
+    initMap();
+
+    return () => {
+      mounted = false;
+      if (mapInstanceRef.current && (mapInstanceRef.current as { remove: () => void }).remove) {
+        (mapInstanceRef.current as { remove: () => void }).remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [serverCoords, colo]);
+
+  return (
+    <div className="mb-4 h-48 w-full overflow-hidden rounded-lg">
+      <div ref={mapRef} id="server-map" className="h-full w-full" />
     </div>
   );
 }
